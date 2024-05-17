@@ -2,7 +2,7 @@ import json
 
 from fastapi import FastAPI, WebSocket
 
-from functions.crane_kinematics import move, process_events
+
 
 app = FastAPI()
 
@@ -17,11 +17,11 @@ async def websocket_endpoint(websocket: WebSocket):
         
         eventType = data['eventType']
 
-        if eventType == 'move':
-            new_data = move(data['movement'])
-            await websocket.send_text(f"Movement was: {new_data}")
-        elif eventType == 'stop':
-            process_events(data['data'])
+        # if eventType == 'move':
+        #     new_data = move(data['movement'])
+        #     await websocket.send_text(f"Movement was: {new_data}")
+        # elif eventType == 'stop':
+        #     process_events(data['data'])
         
 
         # await websocket.send_text(f"Message text was: {new_data}")
