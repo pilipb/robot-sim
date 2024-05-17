@@ -55,32 +55,32 @@ const CraneVisualization = ({ craneParams }) => {
       // base.rotation.x = Math.PI / 2;
 
       // Column
-      const columnGeometry = new THREE.CylinderGeometry(crane.column.diameter, crane.column.diameter, crane.column.height, 32);
+      const columnGeometry = new THREE.CylinderGeometry(craneParams.column.diameter, craneParams.column.diameter, craneParams.column.height, 32);
       const column = new THREE.Mesh(columnGeometry, material);
       column.position.y = 1;
 
       // Arm 1
-      const arm1Geometry = new THREE.BoxGeometry(crane.arm1.width, crane.arm1.length, crane.arm1.height);
+      const arm1Geometry = new THREE.BoxGeometry(craneParams.arm1.width, craneParams.arm1.length, craneParams.arm1.height);
       const arm1 = new THREE.Mesh(arm1Geometry, material);
       arm1.position.y = 1;
       arm1.position.x = 0.5;
       arm1.rotation.x = Math.PI / 2;
 
       // Arm 2
-      const arm2Geometry = new THREE.BoxGeometry(crane.arm2.width, crane.arm2.length, crane.arm2.height);
+      const arm2Geometry = new THREE.BoxGeometry(craneParams.arm2.width, craneParams.arm2.length, craneParams.arm2.height);
       const arm2 = new THREE.Mesh(arm2Geometry, material);
       arm2.position.y = 1;
       arm2.position.x = 0;
 
       // Arm 3
-      const arm3Geometry = new THREE.CylinderGeometry(crane.arm3.width, crane.arm3.width, crane.arm3.length, 32);
+      const arm3Geometry = new THREE.CylinderGeometry(craneParams.arm3.width, craneParams.arm3.width, craneParams.arm3.length, 32);
       const arm3 = new THREE.Mesh(arm3Geometry, material);
       arm3.position.y = 1;
       arm3.position.x = 0;
       arm3.rotation.z = Math.PI / 2;
 
       // Gripper
-      const gripperGeometry = new THREE.BoxGeometry(crane.gripper.width, crane.gripper.length, crane.gripper.height);
+      const gripperGeometry = new THREE.BoxGeometry(craneParams.gripper.width, craneParams.gripper.length, craneParams.gripper.height);
       const gripper = new THREE.Mesh(gripperGeometry, material);
       gripper.position.x = 1;
 
@@ -107,9 +107,13 @@ const CraneVisualization = ({ craneParams }) => {
         }
       };
     }
-  }, [crane]); // Add crane to dependency array to re-render on change
+  }, [craneParams]); // Re-run this effect if craneParams changes
 
-  return <div ref={mountRef} style={{ width: "50%", height: "50%" }} />;
+  return (
+    <div className="visualiser-container">
+      <div ref={mountRef} style={{ width: "50%", height: "50%" }} />
+    </div>
+  );
 };
 
 export default CraneVisualization;

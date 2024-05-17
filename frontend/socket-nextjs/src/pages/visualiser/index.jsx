@@ -20,9 +20,13 @@ export default function Home() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    const [section, key] = name.split('.');
     setCraneParams(prev => ({
       ...prev,
-      [name]: parseFloat(value)
+      [section]: {
+        ...prev[section],
+        [key]: parseFloat(value)
+      }
     }));
   };
 
@@ -51,7 +55,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="container">
+      <div className="input-container">
         <CraneVisualisation craneParams={craneParams} />
         <input
           type="number"
@@ -60,36 +64,78 @@ export default function Home() {
           onChange={handleInputChange}
           placeholder="Column Height"
         />
-        {/* Add other inputs as needed */}
+        <input
+          type="number"
+          name="arm1.length"
+          value={craneParams.arm1.length}
+          onChange={handleInputChange}
+          placeholder="Arm 1 Length"
+        />
+        <input
+          type="number"
+          name="arm2.length"
+          value={craneParams.arm2.length}
+          onChange={handleInputChange}
+          placeholder="Arm 2 Length"
+        />
+        <input
+          type="number"
+          name="arm3.length"
+          value={craneParams.arm3.length}
+          onChange={handleInputChange}
+          placeholder="Arm 3 Length"
+        />
+        <input
+          type="number"
+          name="gripper.length"
+          value={craneParams.gripper.length}
+          onChange={handleInputChange}
+          placeholder="Gripper Length"
+        />
+        <input
+          type="number"
+          name="kinematics.z"
+          value={craneParams.kinematics.z}
+          onChange={handleInputChange}
+          placeholder="Kinematics Z"
+        />
+        <input
+          type="number"
+          name="kinematics.alpha"
+          value={craneParams.kinematics.alpha}
+          onChange={handleInputChange}
+          placeholder="Kinematics Alpha"
+        />
+        <input
+          type="number"
+          name="kinematics.beta"
+          value={craneParams.kinematics.beta}
+          onChange={handleInputChange}
+          placeholder="Kinematics Beta"
+        />
+        <input
+          type="number"
+          name="kinematics.gamma"
+          value={craneParams.kinematics.gamma}
+          onChange={handleInputChange}
+          placeholder="Kinematics Gamma"
+        />
+
       </div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <br />
-        <input
-          type="text"
-          placeholder="Enter your message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          required
-        />
-        <br />
-        <button type="submit">Send</button>
-      </form>
+      
       <hr />
 
-      <h2>Messages</h2>
+      <h2>Dimensions</h2>
       <ul>
-        {messages.map((msg, i) => (
-          <li key={i}>
-            <strong>{msg.name}</strong> : {msg.message}
-          </li>
-        ))}
+        <li>Column Height: {craneParams.column.height}</li>
+        <li>Arm 1 Length: {craneParams.arm1.length}</li>
+        <li>Arm 2 Length: {craneParams.arm2.length}</li>
+        <li>Arm 3 Length: {craneParams.arm3.length}</li>
+        <li>Gripper Length: {craneParams.gripper.length}</li>
+        <li>Kinematics Z: {craneParams.kinematics.z}</li>
+        <li>Kinematics Alpha: {craneParams.kinematics.alpha}</li>
+        <li>Kinematics Beta: {craneParams.kinematics.beta}</li>
+        <li>Kinematics Gamma: {craneParams.kinematics.gamma}</li>
       </ul>
     </div>
   );
