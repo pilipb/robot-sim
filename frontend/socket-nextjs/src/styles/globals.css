@@ -1,0 +1,9 @@
+.visualiser-container {
+  padding: 50px;
+  margin: auto;
+  width: 50%; /* Adjust width as needed */
+  background-color: #f0f0f0; /* Example background color */
+  border: 1px solid #ccc; /* Example border */
+  /* box-shadow: 0 4px 8px rgba(0,0,0,0.1); Example shadow */
+}
+
