@@ -1,19 +1,26 @@
 .visualiser-container {
+    flex: 1; /* Takes up the remaining space */
     display: flex;
-  padding: 5px;
-  margin: auto;
-  width: 50%; /* Adjust width as needed */
-  background-color: #f0f0f0; /* Example background color */
-  border: 1px solid #ccc; /* Example border */
-  /* box-shadow: 0 4px 8px rgba(0,0,0,0.1); Example shadow */
+    align-items: center;
+    padding: 10px auto;
+    margin: 10px auto;
+    width: 100%; /* Full width */
+    height: 100vh; /* Adjust height as needed */
+    background-color: #333333; /* Darker background for the visualizer */
 }
 
 .input-container {
   display: table;
-  width: 200px; /* Small fixed width */
-  margin: 20px auto; /* Centering the table */
-  padding: 10px;
-  border: 1px solid #ccc; /* Example border */
-  background-color: #f0f0f0; /* Example background color */
+  width: 70%; /* Small fixed width */
+  margin: 10px auto; /* Centering the table */
+  padding: 10px auto;
+  background-color: #121212; /* Example background color */
 }
 
+/* set the background */
+.full-page {
+  background-color: #121212;
+  color: #fff;
+  height: 100vh;
+  display: flex;
+}

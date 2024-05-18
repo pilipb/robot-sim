@@ -26,14 +26,11 @@ y = cos(alpha) * arm1 + cos(beta) * arm2 + cos(gamma) * arm3
 import math
 
 def calculate_position(crane_params):
-    arm1 = crane_params.arm1['length']
-    arm2 = crane_params.arm2['length']
-    arm3 = crane_params.arm3['length']
-    h = crane_params.column['height']
-    alpha = crane_params.kinematics['alpha']
-    beta = crane_params.kinematics['beta']
-    gamma = crane_params.kinematics['gamma']
-    z = h
-    x = math.sin(math.radians(alpha)) * arm1 + math.sin(math.radians(beta)) * arm2 + math.sin(math.radians(gamma)) * arm3
-    y = math.cos(math.radians(alpha)) * arm1 + math.cos(math.radians(beta)) * arm2 + math.cos(math.radians(gamma)) * arm3
-    return x, y, z
+
+    z = crane_params['z']
+    alpha = crane_params['alpha']
+    beta = crane_params['beta']
+    gamma = crane_params['gamma']
+    g = crane_params['g']
+    
+    # calculate

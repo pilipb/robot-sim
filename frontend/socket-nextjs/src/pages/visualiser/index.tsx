@@ -13,9 +13,10 @@ export default function Home() {
   const [craneParams, setCraneParams] = useState<CraneParams>({
     kinematics: { z: 0, alpha: 0, beta: 0, gamma: 0 , g: 0}
   });
-  const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
+  const [position, setPosition] = useState({ z:0, alpha:0, beta:0, gamma:0, g:0, x: 0, y: 0 });
 
   const updatePosition = async (newParams: CraneParams) => {
+    console.log("Sending to backend:", JSON.stringify(newParams));
     const response = await fetch('http://localhost:8000/api/calculate-crane', {
       method: 'POST',
       headers: {
@@ -24,59 +25,88 @@ export default function Home() {
       body: JSON.stringify(newParams),
     });
     const data = await response.json();
-    setPosition(data.position); // Assuming the backend returns an object with a 'position' key
+    console.log("Backend response:", data); // Check what the backend returns
+    if (data.position) {
+      setPosition({ ...data.position, x: data.position.x || 0, y: data.position.y || 0 });
+    } else {
+      // Handle the case where data.position is null or undefined
+      setPosition({ z: 0, alpha: 0, beta: 0, gamma: 0, g: 0, x: 0, y: 0 });
+    }
   };
 
   const debouncedUpdatePosition = debounce(updatePosition, 300); // 300 ms
 
-  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const [key, subKey] = name.split('.');
     const newParams = {
       ...craneParams,
-      [name]: parseFloat(value)
+      [key]: {
+        ...craneParams[key],
+        [subKey]: parseFloat(value)
+      }
     };
     setCraneParams(newParams);
     debouncedUpdatePosition(newParams);
   };
 
   return (
-    <div>
+    <div className="full-page">
       <div className="input-container">
         <CraneVisualisation craneParams={craneParams} position={position} />
+
+        {/* add a title for inputs */}
+        <h2>Crane Parameters</h2>
+
+        <label style={{ color: 'red' }}>Lift Height</label>
         <input
-          type="number"
+          type="range"
           name="kinematics.z"
           value={craneParams.kinematics.z}
           onChange={handleInputChange}
-          placeholder="Kinematics Z"
+          placeholder="Lift Height"
+          min="0" max="2" step="0.05"
+          style={{ background: 'red' }}
         />
+        <label style={{ color: 'blue' }}>Swing Angle</label>
         <input
-          type="number"
+          type="range"
           name="kinematics.alpha"
           value={craneParams.kinematics.alpha}
           onChange={handleInputChange}
-          placeholder="Kinematics Alpha"
+          placeholder="Swing Angle"
+          min="0" max="360" step="1"
+          style={{ background: 'blue' }}
         />
+        <label style={{ color: 'green' }}>Elbow Angle</label>
         <input
-          type="number"
+          type="range"
           name="kinematics.beta"
           value={craneParams.kinematics.beta}
           onChange={handleInputChange}
-          placeholder="Kinematics Beta"
+          placeholder="Elbow Angle"
+          min="0" max="360" step="1"
+          style={{ background: 'green' }}
         />
+        <label style={{ color: 'purple' }}>Wrist Angle</label>
         <input
-          type="number"
+          type="range"
           name="kinematics.gamma"
           value={craneParams.kinematics.gamma}
           onChange={handleInputChange}
-          placeholder="Kinematics Gamma"
+          placeholder="Wrist Angle"
+          min="0" max="360" step="1"
+          style={{ background: 'purple' }}
         />
+        <label style={{ color: 'orange' }}>Gripper Angle</label>
         <input
-          type="number"
+          type="range"
           name="kinematics.g"
           value={craneParams.kinematics.g}
           onChange={handleInputChange}
-            placeholder="Kinematics G"
+          placeholder="Gripper Width"
+          min="0" max="1" step="0.01"
+          style={{ background: 'orange' }}
         />
       </div>
     </div>
