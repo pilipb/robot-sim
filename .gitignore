@@ -4,3 +4,6 @@
 /backend/__pycache__
 *.old
 *.gz
+# Ignore specific large files
+node_modules/.pnpm/@next+swc-darwin-x64@14.2.3/node_modules/@next/swc-darwin-x64/next-swc.darwin-x64.node
+node_modules/@next/swc-darwin-x64/next-swc.darwin-x64.node
