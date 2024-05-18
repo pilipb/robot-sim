@@ -2,22 +2,8 @@ import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-const CraneVisualization = ({ craneParams }) => {
+const CraneVisualization = ({ craneParams, position }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-
-  // define the crane dimensions and position
-  // const crane = {
-  //   origin: { x: 0, y: 0, z: 0 },
-  //   column: {diameter: 0.1, height: 2},
-  //   arm1: {length: 0.5, width: 0.1, height: 0.1},
-  //   arm2: {length: 1, width: 0.1, height: 0.1},
-  //   arm3: {length: 0.4, width: 0.05, height: 0.05},
-  //   gripper: {length: 0.1, width: 0.02, height: 0.02},
-  //   kinematics: {z:0,alpha:0, beta:0, gamma:0} 
-  // }
-
-  const [crane, setCrane] = useState(craneParams);
-
 
   useEffect(() => {
     if (mountRef.current) {
@@ -30,7 +16,7 @@ const CraneVisualization = ({ craneParams }) => {
         0.1,
         1000
       );
-      camera.position.set(5, 5, 5);
+      camera.position.set(0, 5, 0);
       camera.lookAt(0, 0, 0);
 
       const renderer = new THREE.WebGLRenderer();
@@ -50,9 +36,9 @@ const CraneVisualization = ({ craneParams }) => {
       const material = new THREE.MeshLambertMaterial({ color: 0x7777ff });
 
       // Base
-      // const baseGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.2, 32);
-      // const base = new THREE.Mesh(baseGeometry, material);
-      // base.rotation.x = Math.PI / 2;
+      const baseGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.2, 32);
+      const base = new THREE.Mesh(baseGeometry, material);
+      base.rotation.x = Math.PI / 2;
 
       // Column
       const columnGeometry = new THREE.CylinderGeometry(craneParams.column.diameter, craneParams.column.diameter, craneParams.column.height, 32);
@@ -82,11 +68,16 @@ const CraneVisualization = ({ craneParams }) => {
       // Gripper
       const gripperGeometry = new THREE.BoxGeometry(craneParams.gripper.width, craneParams.gripper.length, craneParams.gripper.height);
       const gripper = new THREE.Mesh(gripperGeometry, material);
-      gripper.position.x = 1;
+   
 
+      // Translate the crane to the calculated position
+      gripper.position.x = position.x;
+      gripper.position.y = position.y;
+      gripper.position.z = position.z;
 
       // Adding objects to the scene
-      scene.add(column);
+      scene.add(base);
+      base.add(column);
       column.add(arm1);
       arm1.add(arm2);
       arm2.add(arm3);
@@ -107,7 +98,7 @@ const CraneVisualization = ({ craneParams }) => {
         }
       };
     }
-  }, [craneParams]); // Re-run this effect if craneParams changes
+  }, [craneParams, position]); // Re-run this effect if craneParams or position changes
 
   return (
     <div className="visualiser-container">

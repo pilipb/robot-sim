@@ -1,6 +1,7 @@
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import io, { Socket } from "socket.io-client";
 import CraneVisualisation from "../../components/CraneVisualisation";
+import { debounce } from 'lodash';
 
 interface CraneParams {
   origin: { x: number; y: number; z: number };
@@ -27,17 +28,34 @@ export default function Home() {
     gripper: { length: 0.1, width: 0.02, height: 0.02 },
     kinematics: { z: 0, alpha: 0, beta: 0, gamma: 0 }
   });
+  const [position, setPosition] = useState({ x: 0, y: 0, z: 0 });
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const updatePosition = async (newParams: CraneParams) => {
+    const response = await fetch('http://localhost:8000/api/calculate-crane', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newParams),
+    });
+    const data = await response.json();
+    setPosition(data.position); // Assuming the backend returns an object with a 'position' key
+  };
+
+  const debouncedUpdatePosition = debounce(updatePosition, 300); // 300 ms
+
+  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const [section, key] = name.split('.');
-    setCraneParams(prev => ({
-      ...prev,
+    const newParams = {
+      ...craneParams,
       [section]: {
-        ...prev[section],
+        ...craneParams[section],
         [key]: parseFloat(value)
       }
-    }));
+    };
+    setCraneParams(newParams);
+    debouncedUpdatePosition(newParams);
   };
 
   useEffect(() => {
@@ -57,16 +75,11 @@ export default function Home() {
     });
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    socket.emit("send-message", { name, message });
-    setMessage("");
-  }
 
   return (
     <div>
       <div className="input-container">
-        <CraneVisualisation craneParams={craneParams} />
+        <CraneVisualisation craneParams={craneParams} position={position} />
         <input
           type="number"
           name="column.height"
@@ -150,3 +163,4 @@ export default function Home() {
     </div>
   );
 };
+
