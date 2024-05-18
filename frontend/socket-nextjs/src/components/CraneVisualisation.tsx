@@ -5,6 +5,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 const CraneVisualization = ({ craneParams, position }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
+  const fixedCraneDimensions = {
+    origin: { x: 0, y: 0, z: 0 },
+    column: { diameter: 0.1, height: 2 },
+    arm1: { length: 0.5, width: 0.1, height: 0.1 },
+    arm2: { length: 1, width: 0.1, height: 0.1 },
+    arm3: { length: 0.4, width: 0.05, height: 0.05 },
+    gripper: { length: 0.1, width: 0.02, height: 0.02 },
+  };
+
+
   useEffect(() => {
     if (mountRef.current) {
       const scene = new THREE.Scene();
@@ -35,38 +45,38 @@ const CraneVisualization = ({ craneParams, position }) => {
       // Crane Components
       const material = new THREE.MeshLambertMaterial({ color: 0x7777ff });
 
-      // Base
+      // Base  
       const baseGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.2, 32);
       const base = new THREE.Mesh(baseGeometry, material);
-      base.rotation.x = Math.PI / 2;
+      base.position.set(fixedCraneDimensions.origin.x, fixedCraneDimensions.origin.y, fixedCraneDimensions.origin.z);
 
       // Column
-      const columnGeometry = new THREE.CylinderGeometry(craneParams.column.diameter, craneParams.column.diameter, craneParams.column.height, 32);
+      const columnGeometry = new THREE.CylinderGeometry(fixedCraneDimensions.column.diameter, fixedCraneDimensions.column.diameter, fixedCraneDimensions.column.height, 32);
       const column = new THREE.Mesh(columnGeometry, material);
-      column.position.y = 1;
+      column.position.set(fixedCraneDimensions.origin.x, fixedCraneDimensions.origin.y + 1, fixedCraneDimensions.origin.z); // Positioned 1 unit above the base along y-axis
 
       // Arm 1
-      const arm1Geometry = new THREE.BoxGeometry(craneParams.arm1.width, craneParams.arm1.length, craneParams.arm1.height);
+      const arm1Geometry = new THREE.BoxGeometry(fixedCraneDimensions.arm1.width, fixedCraneDimensions.arm1.length, fixedCraneDimensions.arm1.height);
       const arm1 = new THREE.Mesh(arm1Geometry, material);
       arm1.position.y = 1;
       arm1.position.x = 0.5;
       arm1.rotation.x = Math.PI / 2;
 
       // Arm 2
-      const arm2Geometry = new THREE.BoxGeometry(craneParams.arm2.width, craneParams.arm2.length, craneParams.arm2.height);
+      const arm2Geometry = new THREE.BoxGeometry(fixedCraneDimensions.arm2.width, fixedCraneDimensions.arm2.length, fixedCraneDimensions.arm2.height);
       const arm2 = new THREE.Mesh(arm2Geometry, material);
       arm2.position.y = 1;
       arm2.position.x = 0;
 
       // Arm 3
-      const arm3Geometry = new THREE.CylinderGeometry(craneParams.arm3.width, craneParams.arm3.width, craneParams.arm3.length, 32);
+      const arm3Geometry = new THREE.CylinderGeometry(fixedCraneDimensions.arm3.width, fixedCraneDimensions.arm3.width, fixedCraneDimensions.arm3.length, 32);
       const arm3 = new THREE.Mesh(arm3Geometry, material);
       arm3.position.y = 1;
       arm3.position.x = 0;
       arm3.rotation.z = Math.PI / 2;
 
       // Gripper
-      const gripperGeometry = new THREE.BoxGeometry(craneParams.gripper.width, craneParams.gripper.length, craneParams.gripper.height);
+      const gripperGeometry = new THREE.BoxGeometry(fixedCraneDimensions.gripper.width, fixedCraneDimensions.gripper.length, fixedCraneDimensions.gripper.height);
       const gripper = new THREE.Mesh(gripperGeometry, material);
    
 
