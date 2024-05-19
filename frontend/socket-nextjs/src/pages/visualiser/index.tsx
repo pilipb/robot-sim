@@ -16,7 +16,7 @@ export default function Home() {
   const [position, setPosition] = useState({ z:0, alpha:0, beta:0, gamma:0, g:0, x: 0, y: 0 });
 
   const updatePosition = async (newParams: CraneParams) => {
-    console.log("Sending to backend:", JSON.stringify(newParams));
+    // console.log("Sending to backend:", JSON.stringify(newParams));
     const response = await fetch('http://localhost:8000/api/calculate-crane', {
       method: 'POST',
       headers: {
@@ -25,7 +25,7 @@ export default function Home() {
       body: JSON.stringify(newParams),
     });
     const data = await response.json();
-    console.log("Backend response:", data); // Check what the backend returns
+    // console.log("Backend response:", data); // Check what the backend returns
     if (data.position) {
       setPosition({ ...data.position, x: data.position.x || 0, y: data.position.y || 0 });
     } else {
@@ -58,56 +58,58 @@ export default function Home() {
         {/* add a title for inputs */}
         <h2>Crane Parameters</h2>
 
-        <label style={{ color: 'red' }}>Lift Height</label>
-        <input
-          type="range"
-          name="kinematics.z"
-          value={craneParams.kinematics.z}
-          onChange={handleInputChange}
-          placeholder="Lift Height"
-          min="0" max="2" step="0.05"
-          style={{ background: 'red' }}
-        />
-        <label style={{ color: 'blue' }}>Swing Angle</label>
-        <input
-          type="range"
-          name="kinematics.alpha"
-          value={craneParams.kinematics.alpha}
-          onChange={handleInputChange}
-          placeholder="Swing Angle"
-          min="0" max="360" step="1"
-          style={{ background: 'blue' }}
-        />
-        <label style={{ color: 'green' }}>Elbow Angle</label>
-        <input
-          type="range"
-          name="kinematics.beta"
-          value={craneParams.kinematics.beta}
-          onChange={handleInputChange}
-          placeholder="Elbow Angle"
-          min="0" max="360" step="1"
-          style={{ background: 'green' }}
-        />
-        <label style={{ color: 'purple' }}>Wrist Angle</label>
-        <input
-          type="range"
-          name="kinematics.gamma"
-          value={craneParams.kinematics.gamma}
-          onChange={handleInputChange}
-          placeholder="Wrist Angle"
-          min="0" max="360" step="1"
-          style={{ background: 'purple' }}
-        />
-        <label style={{ color: 'orange' }}>Gripper Angle</label>
-        <input
-          type="range"
-          name="kinematics.g"
-          value={craneParams.kinematics.g}
-          onChange={handleInputChange}
-          placeholder="Gripper Width"
-          min="0" max="1" step="0.01"
-          style={{ background: 'orange' }}
-        />
+        <label style={{ color: 'white' }}>Lift Height</label>
+        <div className="sliders">
+          <input
+            type="range"
+            name="kinematics.z"
+            value={craneParams.kinematics.z}
+            onChange={handleInputChange}
+            placeholder="Lift Height"
+            min="0" max="2" step="0.05"
+            style={{ background: 'white' }}
+          />
+          <label style={{ color: 'white' }}>Swing Angle</label>
+          <input
+            type="range"
+            name="kinematics.alpha"
+            value={craneParams.kinematics.alpha}
+            onChange={handleInputChange}
+            placeholder="Swing Angle"
+            min="0" max="6.2" step="0.1"
+            style={{ background: 'blue' }}
+          />
+          <label style={{ color: 'white' }}>Elbow Angle</label>
+          <input
+            type="range"
+            name="kinematics.beta"
+            value={craneParams.kinematics.beta}
+            onChange={handleInputChange}
+            placeholder="Elbow Angle"
+            min="0" max="6.2" step="0.1"
+            style={{ background: 'white' }}
+          />
+          <label style={{ color: 'white' }}>Wrist Angle</label>
+          <input
+            type="range"
+            name="kinematics.gamma"
+            value={craneParams.kinematics.gamma}
+            onChange={handleInputChange}
+            placeholder="Wrist Angle"
+            min="0" max="6.2" step="0.1"
+            style={{ background: 'white' }}
+          />
+          <label style={{ color: 'white' }}>Gripper Width</label>
+          <input
+            type="range"
+            name="kinematics.g"
+            value={craneParams.kinematics.g}
+            onChange={handleInputChange}
+            placeholder="Gripper Width"
+            min="0" max="0.2" step="0.01"
+            style={{ background: 'white' }}
+          />
+          </div>
       </div>
     </div>
   );
