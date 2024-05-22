@@ -1,5 +1,4 @@
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import io, { Socket } from "socket.io-client";
 import CraneVisualisation from "../../components/CraneVisualisation";
 import { debounce } from 'lodash';
 
@@ -7,34 +6,44 @@ interface CraneParams {
   kinematics: { z: number; alpha: number; beta: number; gamma: number, g:0 };
 }
 
-let socket: Socket;
+let socket: WebSocket | null = null;
 
 export default function Home() {
   const [craneParams, setCraneParams] = useState<CraneParams>({
-    kinematics: { z: 0, alpha: 0, beta: 0, gamma: 0 , g: 0}
+    kinematics: { z: 0, alpha: 0, beta: 0, gamma: 0, g: 0 }
   });
-  const [position, setPosition] = useState({ z:0, alpha:0, beta:0, gamma:0, g:0, x: 0, y: 0 });
+  const [position, setPosition] = useState({ z: 0, alpha: 0, beta: 0, gamma: 0, g: 0 });
 
-  const updatePosition = async (newParams: CraneParams) => {
-    // console.log("Sending to backend:", JSON.stringify(newParams));
-    const response = await fetch('http://localhost:8000/api/calculate-crane', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newParams),
-    });
-    const data = await response.json();
-    // console.log("Backend response:", data); // Check what the backend returns
-    if (data.position) {
-      setPosition({ ...data.position, x: data.position.x || 0, y: data.position.y || 0 });
-    } else {
-      // Handle the case where data.position is null or undefined
-      setPosition({ z: 0, alpha: 0, beta: 0, gamma: 0, g: 0, x: 0, y: 0 });
-    }
-  };
+  useEffect(() => {
+    socket = new WebSocket('ws://localhost:8000/ws/crane');
 
-  const debouncedUpdatePosition = debounce(updatePosition, 300); // 300 ms
+    socket.onopen = () => {
+      console.log('WebSocket Connected');
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Backend response:", data);
+      if (data.position) {
+        setPosition({ ...data.position });
+      } else {
+        setPosition({ z: 0, alpha: 0, beta: 0, gamma: 0, g: 0 });
+      }
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket Disconnected');
+      socket = null;
+    };
+
+    return () => {
+      socket?.close();
+    };
+  }, []);
+
+  const debouncedUpdatePosition = debounce((newParams: CraneParams) => {
+    socket?.send(JSON.stringify(newParams));
+  }, 300);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

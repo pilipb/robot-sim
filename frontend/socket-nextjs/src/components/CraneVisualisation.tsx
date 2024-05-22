@@ -20,7 +20,7 @@ const fixedCraneDimensions: CraneDimensions = {
   gripper: { length: 0.1, width: 0.02, height: 0.02 },
 };
 
-const CraneVisualization = ({ craneParams, position = { z: 0, alpha: 0, beta: 0, gamma: 0, g: 0, x: 0, y: 0 }, width = "800px", height = "600px" }) => {
+const CraneVisualization = ({ craneParams, position = { z: 0, alpha: 0, beta: 0, gamma: 0, g: 0 }, width = "800px", height = "600px" }) => {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
