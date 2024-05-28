@@ -15,3 +15,7 @@ Ensure that all the dependencies are installed.
 The frontend is built using Next.js and the backend is built using FastAPI.
 
 The frontend is a simple visualisation of a crane that can be controlled using the buttons on the page. The frontend communicates with the backend over a WebSocket connection.
+
+Example:
+
+![Crane](img/screenshot.png)
